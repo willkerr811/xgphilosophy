@@ -13,9 +13,34 @@
     />
   </head>
   <body>
-    <button id="shuffleButton">Shuffle Layout</button>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <input type="text" id="newStringInput" />
+        <button onclick="updateDate()">Update</button>
+      </div>
+    </div>
 
+    <button id="shuffleButton">Shuffle Layout</button>
+    <h4 id="controls">
+      Press "H" to hide shuffle button.<br />
+      "S" to show shuffle button.<br /><br />
+      Click on a logo and use the arrows to move. <br />
+      Use Enter key to confrim.
+    </h4>
     <h2>Expected Points</h2>
+    <h3 id="date">29th January 2024</h3>
+
+    <a
+      href="https://www.premierleague.com/tables"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1200px-Premier_League_Logo.svg.png"
+        alt="Premier League Logo"
+        class="premier-league-logo"
+      />
+    </a>
 
     <table id="premierLeagueTable">
       <thead>
@@ -29,8 +54,13 @@
         <!-- Table rows will be added dynamically using JavaScript -->
       </tbody>
     </table>
-
-    <div class="bottom-left-text">@xGPhilosophy</div>
+    <a
+      href="https://twitter.com/xGPhilosophy"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div class="bottom-left-text">@xGPhilosophy</div>
+    </a>
 
     <script src="script5.js"></script>
   </body>

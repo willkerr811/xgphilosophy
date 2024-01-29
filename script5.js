@@ -1,10 +1,47 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const shuffleButton = document.getElementById('shuffleButton');
+    const controls = document.getElementById('controls');
+    const date = document.getElementById('date');
+
     shuffleButton.addEventListener('click', function () {
         // Refresh the page
         location.reload();
     });
+
+    date.addEventListener('click', function () {
+        // Refresh the page
+        openModal();
+    });
+
+
+    document.addEventListener('keydown', hideui);
+    function hideui(event) {
+        
+        switch (event.key) {
+            case 'h':
+                // Move the logo left
+                console.log('hideui')
+                shuffleButton.style.display = "none";
+                controls.style.display = "none";
+                break;
+            case 's':
+                // Move the logo left
+                console.log('hideui')
+                shuffleButton.style.display = "block";
+                controls.style.display = "block";
+                break;
+
+            case 'd':
+                // Move the logo left
+                console.log('changedate')
+                date.innerHTML = "9th June 2024";
+                break;
+        }
+    }
+    
+
+
 
 
     fetch('df.csv') // Replace with the actual path to your CSV file
@@ -269,24 +306,120 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Function to create HTML for logos
     function createLogosHTML(teams) {
-        const horizontalOffsetRangeMultiple = 0.3; // Offset range when there are multiple logos (40% of column width)
-        const horizontalOffsetRangeSingle = 0.5;  // Offset range when there is only one logo (10% of column width)
+        const horizontalOffsetRangeMultiple = 0.3;
+        const horizontalOffsetRangeSingle = 0.5;
     
         return teams.map((team, index) => {
             let randomHorizontalOffset;
     
             if (teams.length > 1) {
-                // Generate a random horizontal offset within the range for multiple logos
                 randomHorizontalOffset = (Math.random() * 2 - 1) * horizontalOffsetRangeMultiple;
             } else {
-                // Generate a random horizontal offset within the range for a single logo
                 randomHorizontalOffset = (Math.random() * 2 - 1) * horizontalOffsetRangeSingle;
             }
     
-            const logoHTML = `<img src="${team.logo}" alt="${team.team} Logo" class="logo" style="margin-left: ${randomHorizontalOffset * 100}%;"><!-- Adjusted for percentage -->`;
-            return logoHTML;
+            const logoHTML = `<img src="${team.logo}" alt="${team.team} Logo" class="logo" style="margin-left: ${randomHorizontalOffset * 100}%;" onclick="adjustLogoOffset(this)">`;
             return logoHTML;
         }).join(' ');
     }
 });
 
+
+function adjustLogoOffset(clickedLogo) {
+    let selectedLogo = null;
+
+    // Remove the red border from the previously selected logo (if any)
+    if (selectedLogo) {
+        selectedLogo.style.border = 'none';
+    }
+
+    // Set the new selected logo and add a red border
+    selectedLogo = clickedLogo;
+    selectedLogo.style.border = '2px solid red';
+
+    // Set the initial horizontal offset value
+    let horizontalOffset = parseFloat(clickedLogo.style.marginLeft) || 0;
+    let verticalOffset = parseFloat(clickedLogo.style.marginTop) || 0;
+
+    // Listen for arrow key events
+    function handleArrowKey(event) {
+        if (!selectedLogo) {
+            document.removeEventListener('keydown', handleArrowKey);
+            return;
+        }
+        
+        switch (event.key) {
+            case 'ArrowLeft':
+                // Move the logo left
+                horizontalOffset -= 5;
+                break;
+            case 'ArrowUp':
+                // Move the logo left
+                verticalOffset -= 5;
+                break;
+            case 'ArrowDown':
+                // Move the logo left
+                verticalOffset += 5;
+                break;
+            case 'ArrowRight':
+                // Move the logo right
+                horizontalOffset += 5;
+                break;
+            case 'Enter':
+                // Remove the arrow key event listener
+                removeArrowKeyListener();
+                break;
+        }
+        clickedLogo.style.marginLeft = `${horizontalOffset}%`;
+        clickedLogo.style.marginTop = `${verticalOffset}%`;
+    }
+
+    // Add the event listener for arrow keys
+    document.addEventListener('keydown', handleArrowKey);
+
+    // Function to remove the arrow key event listener
+    function removeArrowKeyListener() {
+        // Remove the red border
+        selectedLogo.style.border = 'none';
+
+        // Remove the event listener
+        document.removeEventListener('keydown', handleArrowKey);
+
+        // Clear the selected logo
+        selectedLogo = null;
+        // clickedLogo = null;
+    }
+}
+
+function openModal() {
+    const modal = document.getElementById('myModal');
+    modal.style.display = 'flex';
+
+    // Get the current text of the element
+    const currentText = date.textContent;
+
+    // Set the input field value to the current text
+    document.getElementById('newStringInput').value = currentText;
+}
+
+function updateDate() {
+    // When the 'Update' button is clicked, update the element with the input value
+    const updatedText = document.getElementById('newStringInput').value;
+    date.textContent = updatedText;
+
+    // Close the modal
+    closeModal();
+}
+
+function closeModal() {
+    const modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+}
+
+// Close the modal if the user clicks outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('myModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+};
